@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-find_package(FFTW  REQUIRED)
+find_package(FFTW REQUIRED fftw)
 include_directories(${FFTW_INCLUDE_DIR})   
 link_directories(${FFTW_LIBRARY_DIR})
 
