@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.0)
 # Adding customized cmake modules
 list(APPEND CMAKE_MODULE_PATH  "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
+set(CMAKE_CXX_FLAGS "-std=c11")
+set(CMAKE_C_FLAGS "-std=c11")
 
 add_subdirectory(src/c_utils)
 
