@@ -47,6 +47,8 @@
 \emailAdd{h.peiris@ucl.ac.uk}
 
 % Macros for equations
+\newcommand{\naturals}{\ensuremath{{\mathbb{N}}}}
+\newcommand{\integers}{\ensuremath{{\mathbb{Z}}}}
 \newcommand{\reals}{\ensuremath{{\mathbb{R}}}}
 \newcommand{\realsnn}{\ensuremath{{\mathbb{R}^{+}}}}
 \newcommand{\ball}{\ensuremath{{\mathbb{B}^3}}}
@@ -56,6 +58,9 @@
 \newcommand{\rvec}{{\boldsymbol{r}}}
 \newcommand{\rang}{{\boldsymbol{\hat{r}}}}
 \newcommand{\rlen}{{r}}
+\newcommand{\spinup}{\ensuremath{\eth}}
+\newcommand{\spindown}{\ensuremath{\bar{\eth}}}
+
 
 % Commands to highlight comments
 \newcommand{\todo}[1]{\textcolor{red}{[TO DO: #1]}}
@@ -79,19 +84,12 @@
 \newpage
 \section{Basis functions}
 
-
-
-
+We define the spherical basis functions and the conventions adopted explicitly in this section.  
 
 
 \subsection{Domains}
 
-$\reals = (-\infty, \infty)$
-$\realsnn = [0, \infty)$ 
-$\sphere$ 
-$\ball = \realsnn \times \sphere$ 
-
-$\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rlen \dx \theta \dx \phi$ 
+We consider the space formed by augmenting the sphere with the real half-line to form the ball $\ball = \realsnn \times \sphere$, where the real half-line is denoted $\realsnn = [0, \infty)$ and the sphere $\sphere$.  Throughout we consider spherical coordinates with $\rvec = \rlen \rang = \rvec(\rlen,\theta,\phi) \in \ball$, where $\rlen \in \realsnn$ and $\rang=(\theta,\phi) \in \sphere$, with colatitude $\theta\in[0,\pi]$ and longitude $\phi \in [0, 2\pi)$. The standard invariant measure on $\ball$ reads $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rlen \dx \theta \dx \phi$, where $\dx \Omega(\rang)=\sin\theta \dx \theta \dx \phi$ is the invariant measure on the sphere.
 
 
 \subsection{Spherical Bessel functions}
@@ -100,13 +98,17 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
 
 \subsubsection{Definition}
 
+The spherical Bessel functions are defined by
 \begin{equation}
   j_\ell(x) = \sqrt{\frac{\pi}{2x}} \: J_{\ell+1/2}(x)
+  ,
 \end{equation}
+for $x\in \reals$, natural $\ell \in \naturals$, with $\reals=(-\infty,\infty)$, where $J_\ell(\cdot)$ are the Bessel functions of the first kind.
 
 
 \subsubsection{Closure}
 
+The spherical Bessel functions satisfy the following closure relation,
 \begin{equation}
   \int_{\realsnn} \dx x x^2 \: j_\ell(ux) \: j_\ell(vx) 
   =
@@ -114,27 +116,82 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
   =
   \frac{\pi}{2u^2} \: 
   \delta(u-v)
+  ,
 \end{equation}
+for $u,v \in \realsnn$, which plays the role of both standard orthogonality and completeness relations.
 
+
+\subsection{Spherical Laguerre functions}
+
+\todo{To add\ldots}
 
 \subsection{Spherical harmonic functions}
 
 
 \subsubsection{Definition}
 
+The scalar spherical harmonic functions are defined by
 \begin{equation}
   Y_{\ell m}(\theta, \phi) = 
   \sqrt{\frac{4\pi}{2\ell+1} \frac{(\ell-m)!}{(\ell+m)!}} \:
-  P_\ell(\cos\theta) \:
+  P_\ell^m(\cos\theta) \:
   \exp{(\im m \phi)}
+  ,
 \end{equation}
+for natural $\ell \in \naturals$, integer $m \in \integers$, $\vert m \vert \leq \ell$, where $P_\ell^m(\cdot)$ are the associated Legendre functions.
 
-\todo{Define spin harmonics through spin raising and lowering operators...}
+Spin raising and lowering operators, $\spinup$ and $\spindown$ respectively, increment and decrement the spin order of a spin $s \in \integers$ function by unity and are defined by
+\begin{equation}  
+  \spinup \equiv
+  -\sin^s \phi 
+  \biggl ( 
+  \frac{\partial}{\partial \phi} 
+  + \frac{\im}{\sin\phi} \frac{\partial}{\partial \theta}
+  \biggr)
+  \sin^{-s}\phi
+\end{equation}
+and
+\begin{equation}  
+  \spindown \equiv 
+  -\sin^{-s} \phi 
+  \biggl ( 
+  \frac{\partial}{\partial \phi} 
+  - \frac{\im}{\sin\phi} \frac{\partial}{\partial \theta}
+  \biggr)
+  \sin^{s}\phi
+  ,
+\end{equation}
+respectively.  
+%
+The spin-$s$ spherical harmonics can thus be expressed in terms of
+the scalar (spin-zero) harmonics through the spin raising and lowering
+operators by 
+\begin{equation}    
+  {}_s Y_{\ell m}(\theta,\phi)
+  =
+  \biggl[ \frac{(\ell-s)!}{(\ell+s)!} \biggr]^{1/2} 
+  \spinup^s
+  Y_{\ell m}(\theta,\phi)
+  ,
+\end{equation}
+for $0 \leq s \leq \ell$,
+and by 
+\begin{equation}    
+  {}_s Y_{\ell m}(\theta,\phi)
+  =
+  (-1)^s
+  \biggl[ \frac{(\ell+s)!}{(\ell-s)!} \biggr]^{1/2} 
+  \spindown^{-s}
+  Y_{\ell m}(\theta,\phi)  
+  ,
+\end{equation}
+for $-\ell \leq s \leq 0$.
 
 
 
 \subsubsection{Orthogonality}
 
+The spin spherical harmonics satisfy the orthogonality relation:
 \begin{equation}
   \int_\sphere \dx \Omega(\rang) \:
   {}_s Y_{\ell m}(\rang) \:
@@ -147,10 +204,12 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
   = 
   \delta_{\ell \ell^\prime} \:
   \delta_{m m^\prime}
+  .
 \end{equation}
 
 \subsubsection{Completeness}
 
+The spin spherical harmonics satisfy the completeness relation:
 \begin{equation}
   \sum_{\ell=0}^\infty \sum_{m=-\ell}^{\ell}
   {}_s Y_{\ell m}(\rang) \:
@@ -168,14 +227,18 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
 
 \subsubsection{Definition}
 
+Spin Fourier-Bessel basis functions are formed by the produce of the spherical Bessel functions and the spin spherical harmonics:
 \begin{equation}
   {}_s Z_{\ell m}(k, \rvec) 
   = \sqrt{\frac{2}{\pi}}\:
   j_\ell(k \rlen) \: {}_s Y_{\ell m}(\rang) 
+  ,
 \end{equation}
+where $k \in \realsnn$.
 
 \subsubsection{Orthogonality}
 
+The (spin) Fourier-Bessel functions satisfy the following orthogonality relation:
 \begin{equation}
   \int_\ball \dx^3 \rvec \:
   {}_s Z_{\ell m}(k, \rvec) \:
@@ -190,6 +253,7 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
 
 \subsubsection{Completeness}
 
+The (spin) Fourier-Bessel functions satisfy the following completeness relation:
 \begin{align}  
   \sum_{\ell=0}^\infty \sum_{m=-\ell}^{\ell}
   \int_{\realsnn} \dx k k^2 \:
@@ -201,8 +265,8 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
   {}_s Y_{\ell m}^\ast(\rang^\prime) 
   \int_{\realsnn} \dx k k^2 \: j_\ell(k \rlen) \: j_\ell(k \rlen^\prime) \\
   & = 
-  \frac{\pi}{2\rlen^2}
-  \delta(\rang-\rang^\prime)
+  \frac{\pi}{2\rlen^2} \:
+  \delta(\rang-\rang^\prime) \:
   \delta(\rlen-\rlen^\prime)\\
   & = 
   \frac{\pi}{2\rlen^2\sin\theta} \:
@@ -211,11 +275,18 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
 \end{align}
 
 
+\subsection{Fourier-Laguerre basis functions}
 
-\newpage
+\todo{To add\ldots}
+
+
 \section{Fourier-Bessel transforms}
 
+
+
 \subsection{Forward transform}
+
+The forward Fourier-Bessel transform reads:
 
 \begin{align}
   {}_s f_{\ell m}(k) 
@@ -237,6 +308,7 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
 
 \subsection{Inverse transform}
 
+The inverse Fourier-Bessel transform reads:
 \begin{align}
   f(\rvec) 
   & =  
@@ -255,7 +327,9 @@ $\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rl
   {}_s Y_{\ell m}(\rang) 
 \end{align}
 
+\subsection{Quadrature}
 
+\todo{To add\ldots}
 
 \section{Fourier-Laguerre transform}
 
