@@ -46,6 +46,17 @@
 \emailAdd{jason.mcewen@ucl.ac.uk}
 \emailAdd{h.peiris@ucl.ac.uk}
 
+% Macros for equations
+\newcommand{\reals}{\ensuremath{{\mathbb{R}}}}
+\newcommand{\realsnn}{\ensuremath{{\mathbb{R}^{+}}}}
+\newcommand{\ball}{\ensuremath{{\mathbb{B}^3}}}
+\newcommand{\sphere}{\ensuremath{{\mathbb{S}^2}}}
+\newcommand{\dx}{\ensuremath{\mathrm{\,d}}}
+\newcommand{\im}{{\rm i}}
+\newcommand{\rvec}{{\boldsymbol{r}}}
+\newcommand{\rang}{{\boldsymbol{\hat{r}}}}
+\newcommand{\rlen}{{r}}
+
 % Commands to highlight comments
 \newcommand{\todo}[1]{\textcolor{red}{[TO DO: #1]}}
 \newcommand{\jdm}[1]{\textcolor{red}{[JDM: #1]}}
@@ -65,12 +76,184 @@
 \section{Introduction}
 
 
-\section{Fourier-Bessel transform}
+\newpage
+\section{Basis functions}
 
-\subsection{Continuous}
 
-\subsection{Discrete}
 
+
+
+
+\subsection{Domains}
+
+$\reals = (-\infty, \infty)$
+$\realsnn = [0, \infty)$ 
+$\sphere$ 
+$\ball = \realsnn \times \sphere$ 
+
+$\dx^3 \rvec = \rlen^2 \dx \rlen \dx \Omega(\rang) =  \rlen^2 \sin\theta \dx \rlen \dx \theta \dx \phi$ 
+
+
+\subsection{Spherical Bessel functions}
+
+
+
+\subsubsection{Definition}
+
+\begin{equation}
+  j_\ell(x) = \sqrt{\frac{\pi}{2x}} \: J_{\ell+1/2}(x)
+\end{equation}
+
+
+\subsubsection{Closure}
+
+\begin{equation}
+  \int_{\realsnn} \dx x x^2 \: j_\ell(ux) \: j_\ell(vx) 
+  =
+  \int_0^\infty \dx x x^2 \: j_\ell(ux) \: j_\ell(vx) 
+  =
+  \frac{\pi}{2u^2} \: 
+  \delta(u-v)
+\end{equation}
+
+
+\subsection{Spherical harmonic functions}
+
+
+\subsubsection{Definition}
+
+\begin{equation}
+  Y_{\ell m}(\theta, \phi) = 
+  \sqrt{\frac{4\pi}{2\ell+1} \frac{(\ell-m)!}{(\ell+m)!}} \:
+  P_\ell(\cos\theta) \:
+  \exp{(\im m \phi)}
+\end{equation}
+
+\todo{Define spin harmonics through spin raising and lowering operators...}
+
+
+
+\subsubsection{Orthogonality}
+
+\begin{equation}
+  \int_\sphere \dx \Omega(\rang) \:
+  {}_s Y_{\ell m}(\rang) \:
+  {}_s Y_{\ell^\prime m^\prime}^\ast(\rang) 
+  = 
+  \int_0^{2\pi} \dx \phi \:
+  \int_0^{\pi} \dx \theta \sin\theta \:
+  {}_s Y_{\ell m}(\theta, \phi) \:
+  {}_s Y_{\ell^\prime m^\prime}^\ast(\theta, \phi) 
+  = 
+  \delta_{\ell \ell^\prime} \:
+  \delta_{m m^\prime}
+\end{equation}
+
+\subsubsection{Completeness}
+
+\begin{equation}
+  \sum_{\ell=0}^\infty \sum_{m=-\ell}^{\ell}
+  {}_s Y_{\ell m}(\rang) \:
+  {}_s Y_{\ell m}^\ast(\rang^\prime) 
+  = 
+  \delta(\rang-\rang^\prime)
+  = 
+  \frac{1}{\sin\theta} \:
+  \delta(\theta-\theta^\prime) \:
+  \delta(\phi-\phi^\prime)
+\end{equation}
+
+
+\subsection{Fourier-Bessel basis functions}
+
+\subsubsection{Definition}
+
+\begin{equation}
+  {}_s Z_{\ell m}(k, \rvec) 
+  = \sqrt{\frac{2}{\pi}}\:
+  j_\ell(k \rlen) \: {}_s Y_{\ell m}(\rang) 
+\end{equation}
+
+\subsubsection{Orthogonality}
+
+\begin{equation}
+  \int_\ball \dx^3 \rvec \:
+  {}_s Z_{\ell m}(k, \rvec) \:
+  {}_s Z_{\ell^\prime m^\prime}^\ast(k^\prime, \rvec)   
+   = 
+  \frac{1}{k^2} \:
+  \delta(k-k^\prime) \:
+  \delta_{\ell \ell^\prime} \:
+  \delta_{m m^\prime}   
+\end{equation}
+
+
+\subsubsection{Completeness}
+
+\begin{align}  
+  \sum_{\ell=0}^\infty \sum_{m=-\ell}^{\ell}
+  \int_{\realsnn} \dx k k^2 \:
+  & {}_s Z_{\ell m}(k, \rvec) \:
+  {}_s Z_{\ell m}^\ast(k, \rvec^\prime) \\ 
+  & =   
+  \frac{2}{\pi} \sum_{\ell=0}^\infty \sum_{m=-\ell}^{\ell} \:
+  {}_s Y_{\ell m}(\rang) \:
+  {}_s Y_{\ell m}^\ast(\rang^\prime) 
+  \int_{\realsnn} \dx k k^2 \: j_\ell(k \rlen) \: j_\ell(k \rlen^\prime) \\
+  & = 
+  \frac{\pi}{2\rlen^2}
+  \delta(\rang-\rang^\prime)
+  \delta(\rlen-\rlen^\prime)\\
+  & = 
+  \frac{\pi}{2\rlen^2\sin\theta} \:
+  \delta(\theta-\theta^\prime) \:
+  \delta(\phi-\phi^\prime)
+\end{align}
+
+
+
+\newpage
+\section{Fourier-Bessel transforms}
+
+\subsection{Forward transform}
+
+\begin{align}
+  {}_s f_{\ell m}(k) 
+  & = 
+  \sqrt{\frac{2}{\pi}} 
+  \int_{\ball} \dx ^3 \rvec \:
+  f(\rvec) \:
+  j_\ell(k\rlen) \:
+  {}_s Y_{\ell m}^\ast(\rang) \\
+  & =  
+  \int_0^{\pi}\dx \theta 
+  \int_0^{2\pi} \dx \phi
+  \int_0^\infty \dx \rlen 
+  \rlen^2 \:
+  f(\rvec) \:
+  j_\ell(k\rlen) \:
+  {}_s Y_{\ell m}^\ast(\rang) 
+\end{align}
+
+\subsection{Inverse transform}
+
+\begin{align}
+  f(\rvec) 
+  & =  
+  \sqrt{\frac{2}{\pi}} 
+  \sum_{\ell m}
+  \int_{\realsnn} \dx k k^2 \:
+  {}_s f_{\ell m}(k) \:
+  j_\ell(k\rlen) \:
+  {}_s Y_{\ell m}(\rang) \\
+  & =
+  \sqrt{\frac{2}{\pi}} 
+  \sum_{\ell m}
+  \int_0^\infty \dx k k^2 \:
+  {}_s f_{\ell m}(k) \:
+  j_\ell(k\rlen) \:
+  {}_s Y_{\ell m}(\rang) 
+\end{align}
 
 
 
