@@ -13,7 +13,7 @@ set(CXXSUPPORT_SRCS
 )
 
 add_library(cxxsupport SHARED ${CXXSUPPORT_SRCS})
-target_link_libraries(cxxsupport ${CFITSIO_LIBRARIES})
+target_link_libraries(cxxsupport ${CFITSIO_LIBRARIES} c_utils fftpack)
 target_include_directories(cxxsupport 
     INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
     PRIVATE $<TARGET_PROPERTY:c_utils,INTERFACE_INCLUDE_DIRECTORIES>
