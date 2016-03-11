@@ -1,14 +1,15 @@
 # Uber3D
 
-Dependencies :
+Dependencies:
+    
     - FFTW
     - cfitsio
 
     
 Compilation instructions:
 
-  $ mkdir build
-  $ cd build
-  $ cmake ..
-  $ make
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ make
 
