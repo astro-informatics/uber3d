@@ -14,4 +14,6 @@ add_subdirectory(src/libsharp)
 
 add_subdirectory(src/ssht)
 
+add_subdirectory(src/Healpix_cxx)
+
 add_subdirectory(src/uber3d)
