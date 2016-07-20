@@ -29,6 +29,7 @@
 \author{Jason~D.~McEwen,}
 \author{Hiranya~V.~Peiris,}
 \author{Layne~Price,}
+\author{Jean-Eric~Campagne,}
 
 \author[1]{and\ldots\ \textcolor{red}{add your name here}\note{Please add names in alphabetical order.  If it becomes appropriate to turn this document into a paper then we will re-address author ordering then.}}
 \affiliation{\today}
@@ -49,6 +50,7 @@
 \emailAdd{boris.leistedt@gmail.com}
 \emailAdd{jason.mcewen@ucl.ac.uk}
 \emailAdd{h.peiris@ucl.ac.uk}
+\emailAdd{campagne@lal.in2p3.fr}
 
 % Macros for equations
 \newcommand{\naturals}{\ensuremath{{\mathbb{N}}}}
@@ -126,14 +128,36 @@ for $u,v \in \realsnn$, which plays the role of both standard orthogonality and 
 
 
 \subsection{Spherical Laguerre functions}
-
-\todo{To add\ldots}
-
+%JEC 20 July 16
+The spherical Laguerre function, or hereafter ${\cal K}$-function, is defined as
+\begin{align}
+{\cal K}^\alpha_n(r, \tau) &\equiv \tau^{-3/2} \sqrt{\frac{n!}{\Gamma(n+\alpha)}} e^{-r/2\tau} \left( \frac{r}{\tau}\right)^{\alpha/2 -1} L_n^{(\alpha)}(r/\tau)= \tau^{-3/2}{\cal K}^\alpha_n(r/\tau,1) \quad \quad\quad  (n\in \mathbb{N}, \quad \alpha \in \mathbb{R})
+\label{eq-sphLag-def}
+\end{align}
+ with $L_n^{(\alpha)}$ the modified Laguerre polynomial 
+ \begin{equation}
+L^{(\alpha)}_n(x)  = \sum_{j=0}^n \left( \begin{array}{c} n + \alpha \\ n - j \end{array}\right) \frac{(-x)^j}{j!}
+\label{eq-lagpoly-def}
+\end{equation}
+The $\tau  \in \realsnn$ parameter in Eq.~\ref{eq-lagpoly-def} is used to rescaled the radial coordinate sampling as described in Sec.~\ref{sec-Lag-quadrature}.
+\subsubsection{Orthogonality}
+Thanks to the orthogonality of the modified Laguerre polynomials w.r.t the weighting function $x^\alpha e^{-x}$, then the  ${\cal K}$-functions are orthogonal w.r.t the $r^2$ measure according to 
+\begin{equation}
+\int_\realsnn {\cal K}^\alpha_n(r, \tau) {\cal K}^\alpha_m(r, \tau) r^2 \dx r = \delta_{nm}
+\label{eq-sphLag-orto}
+\end{equation}
+\subsubsection{Recurrence formula}
+The modified Laguerre polynomials satisfy a series of recurrence relations among them one is particularly useful, namely
+\begin{equation}
+L^{(\alpha)}_n(x) = \frac{1}{n}\left( (2n + \alpha -1 -x)L^{(\alpha)}_{n-1}(x) - (n +  \alpha -1)L^{(\alpha)}_{n-2}(x) \right)
+\label{eq-laguerre-recu}
+\end{equation}
+with the starting seeds $L^{(\alpha)}_0(x)= 1$ and $L^{(\alpha)}_1(x)=(\alpha+1-x)$.
+%
 \subsection{Spherical harmonic functions}
-
-
+%
 \subsubsection{Definition}
-
+%
 The scalar spherical harmonic functions are defined by
 \begin{equation}
   Y_{\ell m}(\theta, \phi) = 
@@ -280,9 +304,26 @@ The (spin) Fourier-Bessel functions satisfy the following completeness relation:
 
 
 \subsection{Fourier-Laguerre basis functions}
-
-\todo{To add\ldots}
-
+\label{sec-FLag-basis}
+%JEC 20 july 16
+\subsubsection{definition}
+%
+Following the definition of the spherical Laguerre functions (Eq.~\ref{eq-sphLag-def}) and the spin spherical harmonics (Eq.~\ref{eq-spin-sph-harm}), one can form a 3D basis, hereafter called "spin Fourier-Laguerre" along the model of the "spin Fourier-Bessel" one, as followed 
+\begin{equation}
+{}_s{\cal K}_{\ell m n}^\alpha(\rvec, \tau) =  {\cal K}_n^\alpha(r, \tau) {}_sY_{\ell m}(\rang) 
+\end{equation}
+with $\tau  \in \realsnn$ a scale factor (see Sec.~\ref{sec-Lag-quadrature})
+%
+\subsubsection{Orthogonality}
+%
+The orthogonality and completeness of the spin Fourier-Laguerre basis is deduced from the properties on their proper space of the spherical Laguerre functions ${\cal K}_n^\alpha(r, \tau)$ and the spin spherical harmonic functions ${}_sY_{\ell m}(\rang)$. It reads
+\begin{align}
+\int_\ball \dx^3 \rvec \: {}_s{\cal K}_{\ell m n}^\alpha(\rvec, \tau) {}_s{\cal K}_{\ell^\prime m^\prime n^\prime}^\alpha(\rvec, \tau) &= \left( \int_\realsnn  {\cal K}^\alpha_n(r, \tau) {\cal K}^\alpha_{n^\prime}(r, \tau) r^2 \dx r \right)\nonumber \\  
+& \times \left( \int_\sphere \dx \Omega(\rang) \:
+  {}_s Y_{\ell m}(\rang) \:
+  {}_s Y_{\ell^\prime m^\prime}^\ast(\rang) \right) 
+  = \delta_{n n^\prime}\delta_{\ell \ell^\prime}\delta_{m m^\prime}
+\end{align}
 
 \section{Fourier-Bessel transforms}
 
@@ -336,13 +377,65 @@ The inverse Fourier-Bessel transform reads:
 \todo{To add\ldots}
 
 \section{Fourier-Laguerre transform}
-
-
-
-
-
-
-
+%JEC 20 July 16
+Any spin three dimensional function ${}_sf(\rvec \in L^2(\ball)$ can be decomposed (Forward transform) and  synthesized (Backward transform) on the spin Fourier-Laguerre basis defined in Sec.~\ref{sec-FLag-basis}.
+%
+\subsection{Forward transform}
+%
+The forward spin Fourier-Laguerre transform reads
+\begin{align}
+{}_sf_{\ell m n} &= \int_\ball \dx ^3 \rvec \: {}_sf(\rvec) {}_s{\cal K}_{\ell m n}^{\alpha \ast}(\rvec, \tau)
+\nonumber \\
+& = \int_0^{\pi}\dx \theta 
+  \int_0^{2\pi} \dx \phi
+  \int_0^\infty \dx \rlen 
+   {}_sY_{\ell m}^\ast(\rang) 
+  \rlen^2 \: {}_sf(\rvec) {\cal K}_n^\alpha(r, \tau)
+\nonumber \\
+&=   \int_0^\infty \dx \rlen  \rlen^2 \: {}_s a_{\ell m}(r)  {\cal K}_n^\alpha(r, \tau)
+\label{eq-FLag-Forward-spin}
+\end{align}
+where one has exhibited the spherical harmonic (intermediate) coefficient defined as
+\begin{equation}
+{}_s a_{\ell m}(r) =  
+\int_0^{\pi}\dx \theta 
+  \int_0^{2\pi} \dx \phi  {}_sY_{\ell m}^\ast(\rang) \: {}_sf(\rvec)
+\end{equation} 
+%
+\subsection{Inverse transform}
+%
+The inverse spin Fourier-Laguerre transform reads
+\begin{align}
+{}_sf(r,\Omega_r) &= \sum_{\ell m} \sum_{n=0}^{\infty} {}_sf_{\ell mn}\  {}_s{\cal K}_{\ell m n}^\alpha(\rvec, \tau) 
+\nonumber \\
+ &= \sum_{\ell m}  \sum_{n=0}^{\infty} {}_sf_{\ell mn}\  {\cal K}_n(r,\tau)\ {}_sY_{\ell m}(\rang) 
+ \label{eq-FLag-inverse-spin}
+\end{align}
+%
+\subsection{Fourier-Bessel and Fourier-Laguerre relationship}
+%
+Applying a Backward Fourier-Laguerre transform followed by a Forward Fourier-Bessel transform leads to the relation between Fourier-Bessel and Fourier-Laguerre coefficients
+\begin{align}
+{}_s f_{\ell m}(k) &= \sqrt{\frac{2}{\pi}}\iint j_\ell(k r) \left( \sum_{\ell^\prime m^\prime}\sum_n {}_s f_{\ell^\prime m^\prime n} {\cal K}^\alpha_n(r,\tau) {}_sY_{\ell^\prime m^\prime}(\rang)\right) {}_sY_{\ell m}^\ast(\rang) \ r^2 \dx r d\Omega(\rang) \\ \nonumber
+& = \sum_n {}_s f_{\ell^\prime m^\prime n} J_{\ell n}(k)
+\end{align}
+with $J_{\ell n}(k)$, the overlapping integral between spherical Bessel function and the spherical Laguerre function, defined by
+\begin{equation}
+J_{\ell ln}(k) = \sqrt{\frac{2}{\pi}}\int j_l(k r) {\cal K}^\alpha_n(r,\tau)\ r^2 \dx r 
+\end{equation}
+%
+\subsection{Laguerre quadrature}
+\label{sec-Lag-quadrature}
+%
+The radial integral of the Forward transform (Eq.~\ref{eq-FLag-Forward-spin}) can be approximated using the Gauss-Laguerre quadrature at order $N$ as 
+\begin{equation}
+{}_s f_{\ell m n} = \sum_{i=0}^{N-1} \omega_i\ {}_s a_{\ell m}(r_i)\ {\cal K}^\alpha_n(r_i,\tau)
+\label{eq-Lag-analyse-quadra}
+\end{equation}
+The $\omega_i$ are the quadrature weights and $r_i$ are r-shell radii defined by $r_i = x_i \tau$ with $\tau = R_{max}/x_{N-1}$ with $x_i$ the  nodes of the quadrature, i.e the $i+1$-th root of $N$-th  modified Laguerre polynomial. Such definition of $r_i$ makes $r_i \in [0, R_{max}]$, i.e. the function $f$ is somehow bounded in the radial direction. For completeness the weights are equal to
+\begin{equation}
+\omega_i = \frac{\Gamma(N+\alpha)}{N(N+1)^2} \frac{r_i e^{r_i}}{[L^{(\alpha)}_{N+1}(r_i)]^2}
+\end{equation}
 % \appendix
 % \section{Some appendix}
 
