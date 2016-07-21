@@ -39,6 +39,10 @@
 
 #include "error_handling.h"
 
+
+namespace uber3d {
+
+
 template <typename T> class normalAlloc__
   {
   public:
@@ -687,6 +691,7 @@ template <typename T> class arr3
       { return (other.size1()==s1)&&(other.size2()==s2)&&(other.size3()==s3); }
   };
 
+} // End of package namespace
 /*! \} */
 
 #endif
