@@ -53,7 +53,6 @@ public:
    */
   virtual uber3d::radial_transform build_laguerre_transform () = 0;
 
-
 };
 } // end of package namespace
 
