@@ -1,4 +1,4 @@
-#include "regular_sampling.h"
+#include "bessel_sampling.h"
 
 // Constructors/Destructors
 //  

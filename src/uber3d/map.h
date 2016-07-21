@@ -20,11 +20,6 @@ class map
 {
 public:
 
-  // Public attributes
-  //  
-
-
-
   // Constructors/Destructors
   //  
 
@@ -34,8 +29,9 @@ public:
    * \param  r_samp Specifies the radial sampling scheme
    * \param  sph_samp Specifies the spherical sampling scheme
    */
-   map (uber3d::radial_sampling r_samp, uber3d::spherical_sampling sph_samp)
+   map (uber3d::radial_sampling &r_samp, uber3d::spherical_sampling &sph_samp)
   {
+          
   }
 
 
@@ -45,7 +41,7 @@ public:
    * \param  dataset_name Dataset name to use for export
    */
    map (std::string filename, std::string dataset_name)
-  {
+  {   
   }
 
 
@@ -84,13 +80,13 @@ public:
    * Returns the radial sampling
    */
   const uber3d::radial_sampling& get_radial_sampling()
-  { return r_samp; }
+  { return *r_samp; }
   
   /**
    *  Returns the spherical sampling
    */
   const uber3d::spherical_sampling& get_spherical_sampling()
-  { return sph_samp; }
+  { return *sph_samp; }
 
   
 protected:
@@ -109,9 +105,9 @@ private:
   //  
 
   // Radial sampling scheme
-  uber3d::radial_sampling r_samp;
+  uber3d::radial_sampling *r_samp;
   // Spherical sampling scheme
-  uber3d::spherical_sampling sph_samp;
+  uber3d::spherical_sampling *sph_samp;
 
 
 };

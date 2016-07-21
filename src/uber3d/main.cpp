@@ -2,9 +2,23 @@
 #include "map.h"
 #include "sfb_coefficients.h"
 #include "sfb_transform.h"
+#include "bessel_sampling.h"
+#include "healpix_sampling.h"
 
 int main (int argc, const char **argv){
     
+    
+    // Defines a radial and spherical sampling scheme
+    double Rmax;
+    long N;
+    uber3d::bessel_sampling r_samp(Rmax, N);
+    uber3d::healpix_sampling sph_samp;
+    
+    // Creates a new map
+    uber3d::map<double> new_map(r_samp, sph_samp);
+    
+    // Exports new map to HDF5 file
+    new_map.to_HDF5("3dmap.hdf", "map_in");
     
     // Loads a map from an HDF5 dataset
     uber3d::map<double> my_map("3dmap.hdf","map_in");

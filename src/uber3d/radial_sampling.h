@@ -24,43 +24,34 @@ class radial_sampling
 {
 public:
 
-
+   // Virtual destructor
+   virtual ~radial_sampling() {}
 
   /**
    * Returns the radius for the  provided radial index
    * \return double
    * \param  ind Radial index
    */
-  virtual double get_r (long ind)
-  {
-  }
-
+  virtual double get_r (long ind) = 0;
 
   /**
    * Returns the number of radial samples
    * \return long
    */
-  virtual long get_nsamp ()
-  {
-  }
-
+  virtual long get_nsamp () = 0;
 
   /**
    * Builds a Spherical Bessel Transform for the this radial sampling scheme
    * \return uber3d::radial_transform
    */
-  virtual uber3d::radial_transform build_sbt ()
-  {
-  }
+  virtual uber3d::radial_transform build_sbt () = 0;
 
 
   /**
    * Builds a Laguerre transform for this radial sampling scheme
    * \return uber3d::radial_transform
    */
-  virtual uber3d::radial_transform build_laguerre_transform ()
-  {
-  }
+  virtual uber3d::radial_transform build_laguerre_transform () = 0;
 
 
 };
