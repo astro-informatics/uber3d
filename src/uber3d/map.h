@@ -77,6 +77,22 @@ public:
   {
   }
 
+  // Accessors 
+  //
+  
+  /**
+   * Returns the radial sampling
+   */
+  const uber3d::radial_sampling& get_radial_sampling()
+  { return r_samp; }
+  
+  /**
+   *  Returns the spherical sampling
+   */
+  const uber3d::spherical_sampling& get_spherical_sampling()
+  { return sph_samp; }
+
+  
 protected:
 
   // Protected attributes
