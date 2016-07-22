@@ -78,6 +78,8 @@ public:
   {
   }
 
+//read and write almn () 
+
 protected:
 
   // Protected attributes
