@@ -7,17 +7,15 @@
 
 ## Install
 
-The standard build command is
+Use the command `mkdir build; cmake .. ; make`
 
-mkdir build; brew install cmake; cmake .. ; make
+**Dependencies**: cmake, HDF5
 
-Dependencies: HDF5
+On **Mac OS** this can be achieved with `brew install cmake homebrew/science/hdf5`. This might require unlinking other installs of HDF5 (e.g. from anaconda).
 
-brew install homebrew/science/hdf5
+## Test
 
-Common issues and how to fix them:
-- unlink any other HDF5 install (e.g. from anaconda)
-- set GCC compiler with "CC=gcc cmake .."
+Use the command `src/uber3d/uber_test`
 
 ## License
 
