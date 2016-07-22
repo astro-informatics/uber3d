@@ -1,12 +1,12 @@
 
 #ifndef HEALPIX_SAMPLING_H
 #define HEALPIX_SAMPLING_H
+#include <string>
 #include "spherical_sampling.h"
 
-#include <string>
+
 
 namespace uber3d {
-
 
 /**
   * class healpix_sampling
@@ -15,12 +15,26 @@ namespace uber3d {
 
 class healpix_sampling : public spherical_sampling
 {
-
+    
+public:
+  // Constructors/Destructors
+  //
+  /**
+   * Creates an HEALPix spherical sampling scheme.
+   * 
+   * \param Nside HEALPix nside parameter
+   */
+   healpix_sampling(int Nside): nside(Nside)
+   {
+        // Initialises a libsharp 
+       
+   }
+    
   /**
    * Returns the  pair (theta, phi) for the pixel of specified index
    * \param  pixel_index Pixel index
    */
-  virtual void get_theta_phi (long pixel_index) {}
+  void get_theta_phi (long pixel_index) {}
 
 
   /**
@@ -29,14 +43,14 @@ class healpix_sampling : public spherical_sampling
    * \param  theta
    * \param  phi
    */
-  virtual long get_index (double theta, double phi) {}
+   long get_index (double theta, double phi) {}
 
 
   /**
    * Returns the number of pixels used in this sampling scheme
    * \return long
    */
-  virtual long get_npix () {}
+   long get_npix () {}
 
 
   /**
@@ -44,9 +58,16 @@ class healpix_sampling : public spherical_sampling
    * \return uber3d::sht
    * \param  lmax Maximum angular multipole
    */
-  virtual uber3d::sht build_sht (long lmax) {}
+   uber3d::sht build_sht (long lmax) {}
 
+private:
 
+  // Private attributes
+  //  
+
+  // HEALPix nside parameter
+  int nside;
+  
 };
 } // end of package namespace
 

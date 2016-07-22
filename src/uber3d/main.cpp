@@ -12,7 +12,7 @@ int main (int argc, const char **argv){
     double Rmax;
     long N;
     uber3d::bessel_sampling r_samp(Rmax, N);
-    uber3d::healpix_sampling sph_samp;
+    uber3d::healpix_sampling sph_samp(512);
     
     // Creates a new map
     uber3d::map<double> new_map(r_samp, sph_samp);
