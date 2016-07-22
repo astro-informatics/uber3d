@@ -49,4 +49,13 @@ int main (int argc, const char **argv){
     // Saves the computed coefficients
     almn.to_HDF5("3dmap.hdf", "almn_out");
     
+    //loop lmax, nmax
+    //input=random number 
+    //almn.write(i,j,input) ** 
+    //transform.backward(alm,map) **
+    //transform.foward(my_map, almn);
+    //almn.read()
+    //compare coefficients
+    
+    
 }
