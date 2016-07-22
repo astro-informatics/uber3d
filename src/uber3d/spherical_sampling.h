@@ -23,10 +23,14 @@ spherical_sampling does not have any pure virtual methods, but its author
 class spherical_sampling
 {
 public:
-
+    
   // Virtual destructor
   virtual ~spherical_sampling() {}
 
+   /**
+    * Returns a newly allocated copy of the sampling scheme
+    */
+   virtual spherical_sampling *copy() = 0;
   
   /**
    * Returns the  pair (theta, phi) for the pixel of specified index

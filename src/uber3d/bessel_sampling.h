@@ -58,8 +58,25 @@ public:
            r_samp[i] = M_PI*((double) i);
    }
    
+   // Copy constructor
+   bessel_sampling(const bessel_sampling& src){
+       N = src.N;
+       r_max = src.r_max;
+       k_max = src.k_max;
+       r_samp =src.r_samp;
+   }
+   
    // Member functions implementing the radial_sampling interface
    //
+   
+   /**
+    * Returns a newly allocated deep copy of the sampling scheme
+    */
+   radial_sampling *copy(){
+       bessel_sampling *out = new bessel_sampling(*this);
+       return out;
+   }
+   
    /**
    * Returns the radius for the  provided radial index
    * \return double

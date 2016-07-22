@@ -10,7 +10,7 @@ using namespace uber3d;
 
 // Constructors/Destructors
 //  
-healpix_sampling::healpix_sampling(int Nside, healpix_sampling::healpix_ordering_scheme order) :nside(Nside)
+healpix_sampling::healpix_sampling(int Nside, healpix_sampling::healpix_ordering_scheme order) :nside(Nside), order(order)
 {
     healpix = new Healpix_Base2(nside, static_cast<Healpix_Ordering_Scheme>(order), SET_NSIDE);
     
@@ -21,6 +21,7 @@ healpix_sampling::~healpix_sampling()
 {
     delete healpix;
 }
+
 
 //  
 // Methods

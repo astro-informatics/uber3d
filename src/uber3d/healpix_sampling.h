@@ -47,9 +47,23 @@ public:
    healpix_sampling(int Nside) : healpix_sampling(Nside, healpix_ordering_scheme::RING) { }
    
    /**
+    * Copy constructor
+    * 
+    */
+   healpix_sampling(const healpix_sampling &src) : healpix_sampling(src.nside, src.order) {}
+   
+   /**
     * Destructor
     */
    ~healpix_sampling();
+   
+   /**
+    * Returns a newly allocated deep copy of the sampling scheme
+    */
+   healpix_sampling *copy(){
+       healpix_sampling *out = new healpix_sampling(*this);
+       return out;
+   }
     
   /**
    * Returns the  pair (theta, phi) for the pixel of specified index
@@ -89,6 +103,9 @@ private:
 
   // HEALPix nside parameter
   int nside;
+  
+  // HEALPix ring ordering
+  healpix_ordering_scheme order;
   
   // HEALPix base structure
   Healpix_Base2 *healpix;

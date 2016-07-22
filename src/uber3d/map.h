@@ -29,11 +29,12 @@ public:
    * \param  r_samp Specifies the radial sampling scheme
    * \param  sph_samp Specifies the spherical sampling scheme
    */
-   map (uber3d::radial_sampling &r_samp, uber3d::spherical_sampling &sph_samp)
+   map (uber3d::radial_sampling &rsamp, uber3d::spherical_sampling &sphsamp)
   {
-          
+      // Allocates new radial and spherical sampling objects
+      r_samp = rsamp.copy();
+      sph_samp = sphsamp.copy();
   }
-
 
   /**
    * Constructs a new map object from the specified HDF5 dataset 
@@ -44,7 +45,6 @@ public:
   {   
   }
 
-
   /**
    * Exports  the entire  map data to an HDF5 file
    * \param  filename File name of output HDF5 file
@@ -52,6 +52,7 @@ public:
    */
   void to_HDF5 (std::string filename, std::string dataset_name)
   {
+      std::cout << r_samp->get_nsamp() << std::endl;
   }
 
 
@@ -100,7 +101,6 @@ protected:
 
 private:
 
-
   // Private attributes
   //  
 
@@ -108,7 +108,6 @@ private:
   uber3d::radial_sampling *r_samp;
   // Spherical sampling scheme
   uber3d::spherical_sampling *sph_samp;
-
 
 };
 } // end of package namespace

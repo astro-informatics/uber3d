@@ -23,9 +23,15 @@ radial_sampling does not have any pure virtual methods, but its author
 class radial_sampling
 {
 public:
-
+    
    // Virtual destructor
    virtual ~radial_sampling() {}
+   
+   
+   /**
+    * Returns a newly allocated copy of the sampling scheme
+    */
+   virtual radial_sampling *copy() = 0;
 
   /**
    * Returns the radius for the  provided radial index
