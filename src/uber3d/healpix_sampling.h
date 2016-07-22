@@ -86,7 +86,7 @@ public:
    * Returns the number of pixels used in this sampling scheme
    * \return long
    */
-   uint64_t get_npix ();
+   uint64_t get_nsamp ();
 
 
   /**

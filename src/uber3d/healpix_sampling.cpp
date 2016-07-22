@@ -31,7 +31,7 @@ uint64_t healpix_sampling::get_index(double theta, double phi)
     return healpix->ang2pix(pointing(theta, phi));
 }
 
-uint64_t healpix_sampling::get_npix()
+uint64_t healpix_sampling::get_nsamp()
 {
     return healpix->Npix();
 }

@@ -43,7 +43,7 @@ public:
 
   /**
    * Returns the pixel index corresponding to specified coordinates
-   * \return long
+   * \return uint64_t
    * \param  theta
    * \param  phi
    */
@@ -51,10 +51,10 @@ public:
 
 
   /**
-   * Returns the number of pixels used in this sampling scheme
-   * \return long
+   * Returns the number of samples used in this scheme
+   * \return uint64_t
    */
-   virtual uint64_t get_npix () = 0;
+   virtual uint64_t get_nsamp () = 0;
 
 
   /**

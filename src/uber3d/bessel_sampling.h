@@ -58,6 +58,13 @@ public:
            r_samp[i] = M_PI*((double) i);
    }
    
+   // Empty constructor
+   bessel_sampling(){
+        N =0;
+        r_max = 1;
+        k_max = 1;
+   }
+   
    // Copy constructor
    bessel_sampling(const bessel_sampling& src){
        N = src.N;
@@ -76,6 +83,49 @@ public:
        bessel_sampling *out = new bessel_sampling(*this);
        return out;
    }
+   
+    void to_HDF5(H5::DataSet dset){
+        
+        // Create the data to export
+        attr_t attr_data;
+        attr_data.Nmax = N;
+        attr_data.Rmax = r_max;
+        
+        // Create attribute type
+        H5::CompType mtype( sizeof(attr_t) );
+        mtype.insertMember( "r_max", HOFFSET(attr_t, Rmax), H5::PredType::NATIVE_DOUBLE);
+        mtype.insertMember( "N", HOFFSET(attr_t, Nmax), H5::PredType::NATIVE_LONG);
+        
+        // Defines dataspace
+        const hsize_t attr_dims[1] = { 1 };
+        H5::DataSpace attr_dataspace = H5::DataSpace (1, attr_dims);
+        
+        // Create attribute and add it to the dataset
+        H5::Attribute att = dset.createAttribute("bessel_sampling", mtype, attr_dataspace);
+        att.write(mtype, &attr_data);
+    }
+   
+    void from_HDF5(H5::DataSet dset){
+        
+        attr_t attr_data; 
+         
+        // Create attribute type
+        H5::CompType mtype( sizeof(attr_t) );
+        mtype.insertMember( "r_max", HOFFSET(attr_t, Rmax), H5::PredType::NATIVE_DOUBLE);
+        mtype.insertMember( "N", HOFFSET(attr_t, Nmax), H5::PredType::NATIVE_LONG);
+        
+        // TODO: Raise an error if attributes not found
+        H5::Attribute att = dset.openAttribute("bessel_sampling");
+        att.read(mtype, &attr_data);
+
+        // Update sampling scheme based on values read in the file
+       N = attr_data.Nmax;
+       r_max = attr_data.Rmax;
+       r_samp.alloc(N);
+       for(long i=0; i < N; i++)
+           r_samp[i] = M_PI*((double) i);
+       k_max = M_PI * ((double) N)/r_max;
+    }
    
    /**
    * Returns the radius for the  provided radial index
@@ -127,6 +177,10 @@ private:
 
   // Private attributes
   //  
+  typedef struct attr_t{
+      double Rmax;
+      long Nmax;
+  } attr_t;
 
   // Maximum radius
   double r_max;

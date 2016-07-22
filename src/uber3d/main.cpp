@@ -15,7 +15,7 @@ int main (int argc, const char **argv){
     uber3d::healpix_sampling sph_samp(256);
     
     // For fun, query some Healpix info
-    std::cout << "Number of spherical samples " << sph_samp.get_npix() << std::endl;
+    std::cout << "Number of spherical samples " << sph_samp.get_nsamp() << std::endl;
     double theta, phi;
     sph_samp.get_theta_phi(10, theta, phi);
     std::cout << "(theta, phi) of pixel number 10 (" << theta << "," << phi << ")" << std::endl;
