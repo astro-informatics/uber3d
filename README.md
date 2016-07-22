@@ -1,6 +1,6 @@
 
 # Uber3D
-**3D Fourier transforms for galaxy survey analyses.**
+**3D Fourier transforms and pixelizations for galaxy survey analyses.**
 
 ![alt tag](https://travis-ci.org/astro-informatics/uber3d.svg?branch=master)
 ![alt tag](http://img.shields.io/:license-gpl2-blue.svg?style=flat)

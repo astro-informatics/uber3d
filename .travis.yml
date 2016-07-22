@@ -23,7 +23,7 @@ addons:
     - clang
     - libhdf5-serial-dev
 script:
-- mkdir build
-- cd build
-- cmake .. && make
-- src/uber3d/uber_test
+  - mkdir build
+  - cd build
+  - cmake .. && make
+  - src/uber3d/uber_test
