@@ -12,7 +12,13 @@ int main (int argc, const char **argv){
     double Rmax;
     long N;
     uber3d::bessel_sampling r_samp(Rmax, N);
-    uber3d::healpix_sampling sph_samp(512);
+    uber3d::healpix_sampling sph_samp(256);
+    
+    // For fun, query some Healpix info
+    std::cout << "Number of spherical samples " << sph_samp.get_npix() << std::endl;
+    double theta, phi;
+    sph_samp.get_theta_phi(10, theta, phi);
+    std::cout << "(theta, phi) of pixel number 10 (" << theta << "," << phi << ")" << std::endl;
     
     // Creates a new map
     uber3d::map<double> new_map(r_samp, sph_samp);

@@ -27,11 +27,14 @@ public:
   // Virtual destructor
   virtual ~spherical_sampling() {}
 
+  
   /**
    * Returns the  pair (theta, phi) for the pixel of specified index
    * \param  pixel_index Pixel index
+   * \param  theta       Output theta
+   * \param  phi         Output phi
    */
-  virtual void get_theta_phi (long pixel_index) = 0;
+  virtual void get_theta_phi (uint64_t pixel_index, double &theta, double &phi) = 0;
 
 
   /**
@@ -40,14 +43,14 @@ public:
    * \param  theta
    * \param  phi
    */
-  virtual long get_index (double theta, double phi) = 0;
+   virtual uint64_t get_index (double theta, double phi) = 0;
 
 
   /**
    * Returns the number of pixels used in this sampling scheme
    * \return long
    */
-  virtual long get_npix () = 0;
+   virtual uint64_t get_npix () = 0;
 
 
   /**
