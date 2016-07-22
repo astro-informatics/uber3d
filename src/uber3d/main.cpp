@@ -9,7 +9,7 @@ int main (int argc, const char **argv){
     
     
     // Defines a radial and spherical sampling scheme
-    double Rmax = 1.0;
+    double Rmax = 1.0
     long N = 100;
     uber3d::bessel_sampling r_samp(Rmax, N);
     uber3d::healpix_sampling sph_samp(256);
