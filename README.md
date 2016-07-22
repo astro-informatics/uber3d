@@ -2,8 +2,8 @@
 # Uber3D
 **3D Fourier transforms for galaxy survey analyses.**
 
-![alt tag](https://travis-ci.org/ixkael/Delight.svg?branch=master)
-![alt tag](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)
+![alt tag](https://travis-ci.org/astro-informatics/uber3d.svg?branch=master)
+![alt tag](http://img.shields.io/:license-gpl2-blue.svg?style=flat)
 
 ## Install
 
@@ -21,4 +21,4 @@ Common issues and how to fix them:
 
 ## License
 
-Copyright 2016 the authors. The code in this repository is released under the open-source MIT License. See the file LICENSE for more details.
+Copyright 2016 the authors. The code in this repository is released under the open-source GPL2 License. See the file LICENSE for more details.
