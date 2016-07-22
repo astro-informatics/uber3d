@@ -20,7 +20,7 @@ addons:
     - gcc
     - g++
     - clang
-    - HDF5
+    - libhdf5-serial-dev
 script:
 - mkdir build
 - cd build
