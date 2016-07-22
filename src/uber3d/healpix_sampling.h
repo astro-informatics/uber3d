@@ -5,6 +5,8 @@
 
 #include "spherical_sampling.h"
 
+#define HEALPIX_SAMPLING_NAME "healpix"
+
 // Declares outside dependencies to avoid having to include the header files here
 // Instead the healpix header files are included in healpix_sampling.cpp
 // This is to try to keep the uber3d header clean and not specific to one
@@ -31,6 +33,10 @@ public:
  
   // Constructors/Destructors
   //
+  // Empty constructor
+  healpix_sampling();
+  
+                                
   /**
    * Creates an HEALPix spherical sampling scheme.
    * 
@@ -65,6 +71,20 @@ public:
        return out;
    }
     
+   /**
+    * Allocates the radial_sampling scheme from an HDF5 data set
+    *   
+    */
+    void from_HDF5(H5::DataSet dset);
+   
+   /**
+    * Exports information about the radial sampling to HDF5 data set
+    * 
+    */
+    void to_HDF5(H5::DataSet dset);
+   
+    
+    
   /**
    * Returns the  pair (theta, phi) for the pixel of specified index
    * \param  pixel_index Pixel index
@@ -88,6 +108,14 @@ public:
    */
    uint64_t get_nsamp ();
 
+   
+  /**
+   * Returns the name of the sampling scheme
+   * \return std::string
+   */
+   std::string get_name (){
+      return std::string(HEALPIX_SAMPLING_NAME);
+   }
 
   /**
    * Builds a new SHT transform for this sampling scheme
@@ -101,6 +129,12 @@ private:
   // Private attributes
   //  
 
+  typedef struct attr_t{
+      long Nside;
+      long Order;
+  } attr_t;
+    
+    
   // HEALPix nside parameter
   int nside;
   

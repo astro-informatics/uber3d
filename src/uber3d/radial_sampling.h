@@ -7,47 +7,9 @@
 #include <H5Cpp.h>
 #include "radial_transform.h"
 
-
 namespace uber3d {
  
-/**
- * Radial sampling factory class
- * The purpose of this class is to be able to create specific instances of 
- * radial_sampling from a keyword
- */
-// class radial_sampling_factory {
-//     typedef std::map<std::string, radial_sampling*(*)()> map_type;
-// 
-//     static radial_sampling* createInstance(std::string const& s) {
-//         map_type::iterator it = getMap()->find(s);
-//         if(it == getMap()->end())
-//             return 0;
-//         return it->second();
-//     }
-// 
-// protected:
-//     static map_type * getMap() {
-//         // never delete'ed. (exist until program termination)
-//         // because we can't guarantee correct destruction order 
-//         if(!map) { map = new map_type; } 
-//         return map; 
-//     }
-// 
-// private:
-//     static map_type * map;
-// };
-// 
-// template<typename T> 
-// radial_sampling * createT() { return new T; }
-// 
-// template<typename T>
-// class DerivedRegister : radial_sampling_factory { 
-//     DerivedRegister(std::string const& s) { 
-//         getMap()->insert(std::make_pair(s, &createT<T>));
-//     }
-// };
-
-
+    
 /**
   * class radial_sampling
   * 
@@ -65,6 +27,9 @@ public:
    
    // Virtual destructor
    virtual ~radial_sampling() {}
+   
+   //TODO: Improve sampling factory
+   static radial_sampling *factory(std::string sampling_name);
    
    /**
     * Returns a newly allocated copy of the sampling scheme
@@ -94,7 +59,14 @@ public:
    * Returns the number of radial samples
    * \return long
    */
-  virtual long get_nsamp () = 0;
+  virtual uint64_t get_nsamp () = 0;
+  
+  
+  /**
+   * Returns the name of the sampling scheme
+   * \return std::string
+   */
+   virtual std::string get_name () = 0;
 
   /**
    * Builds a Spherical Bessel Transform for the this radial sampling scheme
@@ -110,6 +82,9 @@ public:
   virtual uber3d::radial_transform build_laguerre_transform () = 0;
 
 };
+
+
+
 } // end of package namespace
 
 #endif // RADIAL_SAMPLING_H

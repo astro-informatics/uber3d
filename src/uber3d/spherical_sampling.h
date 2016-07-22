@@ -3,6 +3,7 @@
 #define SPHERICAL_SAMPLING_H
 
 #include <string>
+#include <H5Cpp.h>
 #include "sht.h"
 
 namespace uber3d {
@@ -26,12 +27,27 @@ public:
     
   // Virtual destructor
   virtual ~spherical_sampling() {}
-
+  
+   //TODO: Improve sampling factory
+   static spherical_sampling *factory(std::string sampling_name);
+   
    /**
     * Returns a newly allocated copy of the sampling scheme
     */
    virtual spherical_sampling *copy() = 0;
   
+   /**
+    * Allocates the sampling scheme from an HDF5 data set
+    *   
+    */
+   virtual void from_HDF5(H5::DataSet dset) = 0;
+   
+   /**
+    * Exports information about the sampling to HDF5 data set
+    * 
+    */
+   virtual void to_HDF5(H5::DataSet dset) = 0;
+   
   /**
    * Returns the  pair (theta, phi) for the pixel of specified index
    * \param  pixel_index Pixel index
@@ -56,6 +72,11 @@ public:
    */
    virtual uint64_t get_nsamp () = 0;
 
+  /**
+   * Returns the name of the sampling scheme
+   * \return std::string
+   */
+  virtual std::string get_name () = 0;
 
   /**
    * Builds a new SHT transform for this sampling scheme

@@ -7,6 +7,7 @@
 #include <math.h>
 #include "radial_sampling.h"
 
+#define BESSEL_SAMPLING_NAME "bessel"
 
 namespace uber3d {
 
@@ -101,7 +102,7 @@ public:
         H5::DataSpace attr_dataspace = H5::DataSpace (1, attr_dims);
         
         // Create attribute and add it to the dataset
-        H5::Attribute att = dset.createAttribute("bessel_sampling", mtype, attr_dataspace);
+        H5::Attribute att = dset.createAttribute(BESSEL_SAMPLING_NAME, mtype, attr_dataspace);
         att.write(mtype, &attr_data);
     }
    
@@ -115,7 +116,7 @@ public:
         mtype.insertMember( "N", HOFFSET(attr_t, Nmax), H5::PredType::NATIVE_LONG);
         
         // TODO: Raise an error if attributes not found
-        H5::Attribute att = dset.openAttribute("bessel_sampling");
+        H5::Attribute att = dset.openAttribute(BESSEL_SAMPLING_NAME);
         att.read(mtype, &attr_data);
 
         // Update sampling scheme based on values read in the file
@@ -139,9 +140,18 @@ public:
    * Returns the number of radial samples
    * \return long
    */
-   inline long get_nsamp(){
+   inline uint64_t get_nsamp(){
        return N;
    }
+   
+  /**
+   * Returns the name of the sampling scheme
+   * \return std::string
+   */
+  std::string get_name (){
+      return std::string(BESSEL_SAMPLING_NAME);
+  };
+   
    /**
     * Builds a Spherical Bessel Transform for the this radial sampling scheme
     * \return uber3d::radial_transform
@@ -181,7 +191,7 @@ private:
       double Rmax;
       long Nmax;
   } attr_t;
-
+  
   // Maximum radius
   double r_max;
   // Maximum scale

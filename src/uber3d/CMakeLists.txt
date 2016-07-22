@@ -4,7 +4,7 @@ find_package(HDF5 COMPONENTS CXX REQUIRED)
 include_directories(${HDF5_INCLUDE_DIRS})                                       
 link_directories(${HDF5_LIBRARY_DIR})     
 
-set(UBER3D_SRCS error_handling.cc healpix_sampling.cpp map.cpp bessel_sampling.cpp)
+set(UBER3D_SRCS error_handling.cc healpix_sampling.cpp map.cpp bessel_sampling.cpp radial_sampling.cpp spherical_sampling.cpp)
 
 add_library(uber3d SHARED ${UBER3D_SRCS})
 target_link_libraries(uber3d c_utils fftpack sharp cxxsupport healpix ${HDF5_CXX_LIBRARIES})

@@ -3,6 +3,7 @@
 #define MAP_H
 
 #include <string>
+#include <cstring>
 #include <H5Cpp.h>
 
 #include "arr.h"
@@ -47,7 +48,39 @@ public:
    * \param  filename Loads a map from an HDF5 file
    * \param  dataset_name Dataset name to use for export
    */
-   map (std::string filename, std::string dataset_name){ }
+   map (std::string filename, std::string dataset_name){
+
+
+    H5::H5File file(filename.c_str(), H5F_ACC_RDONLY);
+    H5::DataSet dset = file.openDataSet(dataset_name);
+    
+    // Extracts meta data
+    attr_t attr_data; 
+    H5::Attribute att = dset.openAttribute("map");
+        
+    H5::StrType h5_string_type(H5::PredType::C_S1, 256);
+    H5::CompType mtype( sizeof(attr_t) );
+    mtype.insertMember("spherical_sampling", HOFFSET(attr_t, sph_samp), h5_string_type);
+    mtype.insertMember("radial_sampling",    HOFFSET(attr_t, rad_samp), h5_string_type);
+    att.read(mtype, &attr_data);
+    
+    // Allocate new radial and spherical sampling schemes
+    // TODO: Use a proper object factory to allow the creation of the right objects
+    r_samp   = radial_sampling::factory(std::string(attr_data.rad_samp));
+    r_samp->from_HDF5(dset);
+    sph_samp = spherical_sampling::factory(std::string(attr_data.sph_samp));
+    sph_samp->from_HDF5(dset);
+    
+    // Loads the data
+    H5::DataSpace dspace = dset.getSpace();
+    hsize_t dims_out[2];
+    int ndims = dspace.getSimpleExtentDims( dims_out, NULL);
+    data.alloc(dims_out[0], dims_out[1]);
+    dset.read(data[0], get_hdf_type());
+    
+    file.close();
+       
+    }
 
   /**
    * Exports  the entire  map data to an HDF5 file
@@ -69,8 +102,27 @@ public:
         // Write data to the dataset
         dset.write(data[0], get_hdf_type());
         
+        // Adds attribute to store meta data
+        attr_t attr_data; 
+        std::strcpy(attr_data.sph_samp, sph_samp->get_name().c_str());
+        std::strcpy(attr_data.rad_samp, r_samp->get_name().c_str());
+        
+        H5::StrType h5_string_type(H5::PredType::C_S1, 256);
+        H5::CompType mtype( sizeof(attr_t) );
+        mtype.insertMember("spherical_sampling", HOFFSET(attr_t, sph_samp), h5_string_type);
+        mtype.insertMember("radial_sampling",    HOFFSET(attr_t, rad_samp), h5_string_type);
+        
+        // Defines dataspace
+        const hsize_t attr_dims[1] = { 1 };
+        H5::DataSpace attr_dataspace = H5::DataSpace(1, attr_dims);
+        
+        // Create attribute and add it to the dataset
+        H5::Attribute att = dset.createAttribute("map", mtype, attr_dataspace);
+        att.write(mtype, &attr_data);
+        
         // Export data from sampling schemes to dataset
         r_samp->to_HDF5(dset);
+        sph_samp->to_HDF5(dset);
         
         // All done
         file.close();
@@ -83,13 +135,13 @@ public:
   /**
    * Returns the radial sampling
    */
-  const uber3d::radial_sampling& get_radial_sampling()
+   uber3d::radial_sampling& get_radial_sampling()
   { return *r_samp; }
   
   /**
    *  Returns the spherical sampling
    */
-  const uber3d::spherical_sampling& get_spherical_sampling()
+   uber3d::spherical_sampling& get_spherical_sampling()
   { return *sph_samp; }
 
   
@@ -110,7 +162,12 @@ private:
 
   // Private attributes
   //  
-
+  // Structure to store meta data about the map
+  typedef struct attr_t{
+      char rad_samp[256];
+      char sph_samp[256];
+  } attr_t;
+  
   // Radial sampling scheme
   uber3d::radial_sampling *r_samp;
   // Spherical sampling scheme
