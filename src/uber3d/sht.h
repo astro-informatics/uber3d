@@ -40,7 +40,6 @@ public:
   virtual void backward (const arr<dcomplex> &in_alm, arr<double> &out_shell) = 0;
   virtual void backward (const arr<fcomplex> &in_alm, arr<float> &out_shell) = 0;
 
-
 };
 } // end of package namespace
 

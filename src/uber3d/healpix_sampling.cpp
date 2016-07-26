@@ -96,7 +96,7 @@ void healpix_sampling::get_theta_phi(uint64_t pixel_index, double& theta, double
 
 sht *healpix_sampling::build_sht(long int lmax)
 {
-    sharp_sht * sharp = new sharp_sht;
+    sharp_sht * sharp = new sharp_sht(lmax, lmax);
     sharp->set_healpix_geometry(healpix->Nside());
     return sharp;
 }
