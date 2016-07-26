@@ -122,7 +122,7 @@ public:
    * \return uber3d::sht
    * \param  lmax Maximum angular multipole
    */
-   uber3d::sht build_sht (long lmax);
+   uber3d::sht  * build_sht (long lmax);
 
 private:
 

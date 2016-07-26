@@ -4,7 +4,7 @@
 #include <pointing.h>
 
 #include "healpix_sampling.h"
-
+#include "sharp_sht.h"
 
 using namespace uber3d;
 
@@ -94,10 +94,11 @@ void healpix_sampling::get_theta_phi(uint64_t pixel_index, double& theta, double
     phi   = point.phi;
 }
 
-
-sht healpix_sampling::build_sht(long int lmax)
+sht *healpix_sampling::build_sht(long int lmax)
 {
-
+    sharp_sht * sharp = new sharp_sht;
+    sharp->set_healpix_geometry(healpix->Nside());
+    return sharp;
 }
 
 
