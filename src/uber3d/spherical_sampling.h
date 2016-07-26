@@ -83,7 +83,7 @@ public:
    * \return uber3d::sht
    * \param  lmax Maximum angular multipole
    */
-  virtual uber3d::sht * build_sht (long lmax) = 0;
+  virtual uber3d::sht * build_sht(long lmax) = 0;
 
 
 };

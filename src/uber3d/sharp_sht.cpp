@@ -4,10 +4,14 @@
 using namespace uber3d;
 
 
-sharp_sht::sharp_sht()
+sharp_sht::sharp_sht(long lmax, long mmax)
 {
     dsharpjob = new sharp_cxxjob<double>;
     fsharpjob = new sharp_cxxjob<float>;
+    
+    // Initialize the alm parameters
+    dsharpjob->set_triangular_alm_info(lmax, mmax);
+    fsharpjob->set_triangular_alm_info(lmax, mmax);
 }
 
 sharp_sht::~sharp_sht()

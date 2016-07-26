@@ -22,7 +22,7 @@ public:
     
    // Constructor
    //
-   sharp_sht();
+   sharp_sht(long nmax, long mmax);
     
     // Destructor
     //
