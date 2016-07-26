@@ -39,7 +39,7 @@ public:
    * \param  in_map Input shell
    * \param  out_alm output spherical harmonic coefficients
    */
-   void forward (arr<double> &in_map, arr<dcomplex> &out_alm);
+   void forward (const arr<double> &in_map, arr<dcomplex> &out_alm);
 
 
   /**
@@ -47,7 +47,7 @@ public:
    * \param  in_alm Input spherical harmonics coefficients
    * \param  out_map Ouput spherical shell
    */
-   void backward (arr<dcomplex> &in_alm, arr<double> &out_map);
+   void backward (const  arr<dcomplex> &in_alm, arr<double> &out_map);
     
 private:
     

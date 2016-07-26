@@ -17,16 +17,16 @@ sharp_sht::~sharp_sht()
 
 void sharp_sht::set_healpix_geometry(long int nside)
 {
-    sharpjob.set_Healpix_geometry(nside);
+    sharpjob->set_Healpix_geometry(nside);
     
 }
 
-void sharp_sht::forward(const arr< double > in_map, arr< dcomplex > out_alm)
+void sharp_sht::forward(const arr< double > &in_map, arr< dcomplex > &out_alm)
 {
     sharpjob->map2alm(in_map.begin(), out_alm.begin(), false);
 }
 
-void sharp_sht::backward(const arr< dcomplex > in_alm, arr< double > out_map)
+void sharp_sht::backward(const arr< dcomplex > &in_alm, arr< double > &out_map)
 {
     sharpjob->alm2map(in_alm.begin(), out_map.begin(), false);
 }

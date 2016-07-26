@@ -29,14 +29,14 @@ public:
    * \param  in_map Input shell
    * \param  out_alm output spherical harmonic coefficients
    */
-  virtual void forward (arr<double> &in_map, arr<dcomplex> &out_alm) = 0;
+  virtual void forward (const arr<double> &in_map, arr<dcomplex> &out_alm) = 0;
 
   /**
    * Backward spherical harmonics coefficients
    * \param  in_alm Input spherical harmonics coefficients
    * \param  out_shell Ouput spherical shell
    */
-  virtual void backward (arr<dcomplex> &in_alm, arr<double> &out_shell) = 0;
+  virtual void backward (const arr<dcomplex> &in_alm, arr<double> &out_shell) = 0;
 
 
 };
