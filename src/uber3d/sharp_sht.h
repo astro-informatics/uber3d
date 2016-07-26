@@ -40,6 +40,7 @@ public:
    * \param  out_alm output spherical harmonic coefficients
    */
    void forward (const arr<double> &in_map, arr<dcomplex> &out_alm);
+   void forward (const arr<float> &in_map, arr<fcomplex> &out_alm);
 
 
   /**
@@ -47,13 +48,14 @@ public:
    * \param  in_alm Input spherical harmonics coefficients
    * \param  out_map Ouput spherical shell
    */
-   void backward (const  arr<dcomplex> &in_alm, arr<double> &out_map);
+   void backward (const arr<dcomplex> &in_alm, arr<double> &out_map);
+   void backward (const arr<fcomplex> &in_alm, arr<float> &out_map);
     
 private:
     
     // Private members
-    sharp_cxxjob<double> *sharpjob;
-    
+    sharp_cxxjob<double> *dsharpjob;
+    sharp_cxxjob<float> *fsharpjob;
 };
 
 } // end of package namespace

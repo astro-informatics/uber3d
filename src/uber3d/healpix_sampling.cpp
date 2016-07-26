@@ -94,7 +94,6 @@ void healpix_sampling::get_theta_phi(uint64_t pixel_index, double& theta, double
     phi   = point.phi;
 }
 
-
 sht *healpix_sampling::build_sht(long int lmax)
 {
     sharp_sht * sharp = new sharp_sht;
