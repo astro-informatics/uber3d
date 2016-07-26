@@ -25,8 +25,8 @@
 /*! \file sharp_mpi.c
  *  Functionality only needed for MPI-parallel transforms
  *
- *  Copyright (C) 2012 Max-Planck-Society
- *  \author Martin Reinecke
+ *  Copyright (C) 2012-2013 Max-Planck-Society
+ *  \author Martin Reinecke \author Dag Sverre Seljebotn
  */
 
 #ifdef USE_MPI
@@ -185,116 +185,161 @@ static void alloc_phase_mpi (sharp_job *job, int nm, int ntheta,
   ptrdiff_t phase_size = (job->type==SHARP_MAP2ALM) ?
     (ptrdiff_t)(nmfull)*ntheta : (ptrdiff_t)(nm)*nthetafull;
   job->phase=RALLOC(dcmplx,2*job->ntrans*job->nmaps*phase_size);
+  job->s_m=2*job->ntrans*job->nmaps;
+  job->s_th = job->s_m * ((job->type==SHARP_MAP2ALM) ? nmfull : nm);
   }
 
 static void alm2map_comm (sharp_job *job, const sharp_mpi_info *minfo)
   {
   if (job->type != SHARP_MAP2ALM)
+    {
     sharp_communicate_alm2map (minfo,&job->phase);
+    job->s_th=job->s_m*minfo->nmtotal;
+    }
   }
 
 static void map2alm_comm (sharp_job *job, const sharp_mpi_info *minfo)
   {
   if (job->type == SHARP_MAP2ALM)
+    {
     sharp_communicate_map2alm (minfo,&job->phase);
+    job->s_th=job->s_m*minfo->nm[minfo->mytask];
+    }
   }
 
 static void sharp_execute_job_mpi (sharp_job *job, MPI_Comm comm)
   {
-  double timer=wallTime();
   int ntasks;
   MPI_Comm_size(comm, &ntasks);
   if (ntasks==1) /* fall back to scalar implementation */
     { sharp_execute_job (job); return; }
 
-  int lmax = job->ainfo->lmax;
-
-  job->norm_l = sharp_Ylmgen_get_norm (lmax, job->spin);
-
+  MPI_Barrier(comm);
+  double timer=wallTime();
+  job->opcnt=0;
   sharp_mpi_info minfo;
   sharp_make_mpi_info(comm, job, &minfo);
 
-/* clear output arrays if requested */
-  init_output (job);
-
-  alloc_phase_mpi (job,job->ainfo->nm,job->ginfo->npairs,minfo.mmax+1,
-    minfo.npairtotal);
-
-  double *cth = RALLOC(double,minfo.npairtotal),
-         *sth = RALLOC(double,minfo.npairtotal);
-  idxhelper *stmp = RALLOC(idxhelper,minfo.npairtotal);
-  for (int i=0; i<minfo.npairtotal; ++i)
+  if (minfo.npairtotal>minfo.ntasks*300)
     {
-    cth[i] = cos(minfo.theta[i]);
-    sth[i] = sin(minfo.theta[i]);
-    stmp[i].s=sth[i];
-    stmp[i].i=i;
+    int nsub=(minfo.npairtotal+minfo.ntasks*200-1)/(minfo.ntasks*200);
+    for (int isub=0; isub<nsub; ++isub)
+      {
+      sharp_job ljob=*job;
+      // When creating a_lm, every sub-job produces a complete set of
+      // coefficients; they need to be added up.
+      if ((isub>0)&&(job->type==SHARP_MAP2ALM)) ljob.flags|=SHARP_ADD;
+      sharp_geom_info lginfo;
+      lginfo.pair=RALLOC(sharp_ringpair,(job->ginfo->npairs/nsub)+1);
+      lginfo.npairs=0;
+      lginfo.nphmax = job->ginfo->nphmax;
+      while (lginfo.npairs*nsub+isub<job->ginfo->npairs)
+        {
+        lginfo.pair[lginfo.npairs]=job->ginfo->pair[lginfo.npairs*nsub+isub];
+        ++lginfo.npairs;
+        }
+      ljob.ginfo=&lginfo;
+      sharp_execute_job_mpi (&ljob,comm);
+      job->opcnt+=ljob.opcnt;
+      DEALLOC(lginfo.pair);
+      }
     }
-  qsort (stmp,minfo.npairtotal,sizeof(idxhelper),idx_compare);
-  int *idx = RALLOC(int,minfo.npairtotal);
-  for (int i=0; i<minfo.npairtotal; ++i)
-    idx[i]=stmp[i].i;
-  DEALLOC(stmp);
+  else
+    {
+    int lmax = job->ainfo->lmax;
+    job->norm_l = sharp_Ylmgen_get_norm (lmax, job->spin);
 
-/* map->phase where necessary */
-  map2phase (job, minfo.mmax, 0, job->ginfo->npairs);
+    /* clear output arrays if requested */
+    init_output (job);
 
-  map2alm_comm (job, &minfo);
+    alloc_phase_mpi (job,job->ainfo->nm,job->ginfo->npairs,minfo.mmax+1,
+      minfo.npairtotal);
 
-#pragma omp parallel
+    double *cth = RALLOC(double,minfo.npairtotal),
+          *sth = RALLOC(double,minfo.npairtotal);
+    int *mlim = RALLOC(int,minfo.npairtotal);
+    for (int i=0; i<minfo.npairtotal; ++i)
+      {
+      cth[i] = cos(minfo.theta[i]);
+      sth[i] = sin(minfo.theta[i]);
+      mlim[i] = sharp_get_mlim(lmax, job->spin, sth[i], cth[i]);
+      }
+
+    /* map->phase where necessary */
+    map2phase (job, minfo.mmax, 0, job->ginfo->npairs);
+
+    map2alm_comm (job, &minfo);
+
+#pragma omp parallel if ((job->flags&SHARP_NO_OPENMP)==0)
 {
-  sharp_job ljob = *job;
-  sharp_Ylmgen_C generator;
-  sharp_Ylmgen_init (&generator,lmax,minfo.mmax,ljob.spin);
-  alloc_almtmp(&ljob,lmax);
+    sharp_job ljob = *job;
+    sharp_Ylmgen_C generator;
+    sharp_Ylmgen_init (&generator,lmax,minfo.mmax,ljob.spin);
+    alloc_almtmp(&ljob,lmax);
 
 #pragma omp for schedule(dynamic,1)
-  for (int mi=0; mi<job->ainfo->nm; ++mi)
-    {
-/* alm->alm_tmp where necessary */
-    alm2almtmp (&ljob, lmax, mi);
+    for (int mi=0; mi<job->ainfo->nm; ++mi)
+      {
+  /* alm->alm_tmp where necessary */
+      alm2almtmp (&ljob, lmax, mi);
 
-/* inner conversion loop */
-    inner_loop (&ljob, minfo.ispair, cth, sth, 0, minfo.npairtotal,
-      &generator, mi, idx);
+  /* inner conversion loop */
+      inner_loop (&ljob, minfo.ispair, cth, sth, 0, minfo.npairtotal,
+        &generator, mi, mlim);
 
-/* alm_tmp->alm where necessary */
-    almtmp2alm (&ljob, lmax, mi);
-    }
+  /* alm_tmp->alm where necessary */
+      almtmp2alm (&ljob, lmax, mi);
+      }
 
-  sharp_Ylmgen_destroy(&generator);
-  dealloc_almtmp(&ljob);
+    sharp_Ylmgen_destroy(&generator);
+    dealloc_almtmp(&ljob);
 
 #pragma omp critical
-  job->opcnt+=ljob.opcnt;
+    job->opcnt+=ljob.opcnt;
 } /* end of parallel region */
 
-  alm2map_comm (job, &minfo);
+    alm2map_comm (job, &minfo);
 
-/* phase->map where necessary */
-  phase2map (job, minfo.mmax, 0, job->ginfo->npairs);
+  /* phase->map where necessary */
+    phase2map (job, minfo.mmax, 0, job->ginfo->npairs);
 
-  DEALLOC(cth);
-  DEALLOC(sth);
-  DEALLOC(idx);
-  DEALLOC(job->norm_l);
-  dealloc_phase (job);
+    DEALLOC(mlim);
+    DEALLOC(cth);
+    DEALLOC(sth);
+    DEALLOC(job->norm_l);
+    dealloc_phase (job);
+    }
   sharp_destroy_mpi_info(&minfo);
   job->time=wallTime()-timer;
   }
 
 void sharp_execute_mpi (MPI_Comm comm, sharp_jobtype type, int spin,
-  int add_output, void *alm, void *map, const sharp_geom_info *geom_info,
-  const sharp_alm_info *alm_info, int ntrans, int flags, int nv, double *time,
+  void *alm, void *map, const sharp_geom_info *geom_info,
+  const sharp_alm_info *alm_info, int ntrans, int flags, double *time,
   unsigned long long *opcnt)
   {
   sharp_job job;
-  sharp_build_job_common (&job, type, spin, add_output, alm, map, geom_info,
-    alm_info, ntrans, flags, nv);
+  sharp_build_job_common (&job, type, spin, alm, map, geom_info, alm_info,
+    ntrans, flags);
 
   sharp_execute_job_mpi (&job, comm);
   if (time!=NULL) *time = job.time;
   if (opcnt!=NULL) *opcnt = job.opcnt;
+  }
+
+/* We declare this only in C file to make symbol available for Fortran wrappers;
+   without declaring it in C header as it should not be available to C code */
+void sharp_execute_mpi_fortran(MPI_Fint comm, sharp_jobtype type, int spin,
+  void *alm, void *map, const sharp_geom_info *geom_info,
+  const sharp_alm_info *alm_info, int ntrans, int flags, double *time,
+  unsigned long long *opcnt);
+void sharp_execute_mpi_fortran(MPI_Fint comm, sharp_jobtype type, int spin,
+  void *alm, void *map, const sharp_geom_info *geom_info,
+  const sharp_alm_info *alm_info, int ntrans, int flags, double *time,
+  unsigned long long *opcnt)
+  {
+  sharp_execute_mpi(MPI_Comm_f2c(comm), type, spin, alm, map, geom_info,
+                    alm_info, ntrans, flags, time, opcnt);
   }
 
 #endif

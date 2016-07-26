@@ -25,8 +25,8 @@
 /*! \file sharp_internal.h
  *  Internally used functionality for the spherical transform library.
  *
- *  Copyright (C) 2006-2012 Max-Planck-Society
- *  \author Martin Reinecke
+ *  Copyright (C) 2006-2013 Max-Planck-Society
+ *  \author Martin Reinecke \author Dag Sverre Seljebotn
  */
 
 #ifndef PLANCK_SHARP_INTERNAL_H
@@ -38,24 +38,22 @@
 
 #include "sharp.h"
 
-typedef enum { FLOAT, DOUBLE } sharp_fde;
+#define SHARP_MAXTRANS 100
 
 typedef struct
   {
   sharp_jobtype type;
   int spin;
-  int add_output;
   int nmaps, nalm;
   int flags;
-  sharp_fde fde;
   void **map;
   void **alm;
+  int s_m, s_th; // strides in m and theta direction
   complex double *phase;
   double *norm_l;
   complex double *almtmp;
   const sharp_geom_info *ginfo;
   const sharp_alm_info *ainfo;
-  int nv;
   double time;
   int ntrans;
   unsigned long long opcnt;
@@ -63,5 +61,6 @@ typedef struct
 
 int sharp_get_nv_max (void);
 int sharp_nv_oracle (sharp_jobtype type, int spin, int ntrans);
+int sharp_get_mlim (int lmax, int spin, double sth, double cth);
 
 #endif
