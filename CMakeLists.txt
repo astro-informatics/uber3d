@@ -19,4 +19,6 @@ add_subdirectory(src/libsharp)
 
 add_subdirectory(src/Healpix_cxx)
 
+add_subdirectory(src/dsbt)
+
 add_subdirectory(src/uber3d)

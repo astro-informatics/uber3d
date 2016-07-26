@@ -158,7 +158,7 @@ public:
     * \param lmax Maximum order of the spherical Bessel transform
     * \param kmax Maximum scale
     */
-   uber3d::radial_transform build_sbt (long int lmax, double kmax){
+   uber3d::radial_transform *build_sbt (long int lmax, double kmax){
          //TODO: Properly handle these cases
         std::cerr << "SFB transform not implemented for bessel sampling" << std::endl;
         exit(-1);
@@ -168,7 +168,7 @@ public:
     * Builds a Laguerre transform for this radial sampling scheme
     * \return uber3d::radial_transform
     */
-    uber3d::radial_transform build_laguerre_transform (){
+    uber3d::radial_transform *build_laguerre_transform (){
         //TODO: Properly handle these cases
         std::cerr << "Laguerre transform not implemented for bessel sampling" << std::endl;
         exit(-1);

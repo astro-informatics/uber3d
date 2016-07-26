@@ -31,8 +31,8 @@ public:
    * \param  in_los Input line of sight
    * \param  out_coeff Output coefficients
    */
-  virtual void forward (const arr<float> &in_los, arr<fcomplex> &out_coeff) = 0;
-  virtual void forward (const arr<double> &in_los, arr<dcomplex> &out_coeff) = 0;
+  virtual void forward (const arr<float> &in_los, arr<float> &out_coeff) = 0;
+  virtual void forward (const arr<double> &in_los, arr<double> &out_coeff) = 0;
 
 
   /**
@@ -40,8 +40,8 @@ public:
    * \param  in_coeff Input coefficients
    * \param  out_los Output line of sight
    */
-  virtual void backward (const arr<float> &in_coeff, arr<fcomplex> &out_los) = 0;
-  virtual void backward (const arr<double> &in_coeff, arr<dcomplex> &out_los) = 0;
+  virtual void backward (const arr<float> &in_coeff, arr<float> &out_los) = 0;
+  virtual void backward (const arr<double> &in_coeff, arr<double> &out_los) = 0;
 
 
 };
