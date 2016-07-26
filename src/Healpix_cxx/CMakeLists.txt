@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(healpix)
 
 set(HEALPIX_SRCS 
-  powspec.cc alm.cc alm_powspec_tools.cc
+  powspec.cc alm.cc alm_powspec_tools.cc alm_healpix_tools.cc
   healpix_tables.cc healpix_base.cc healpix_map.cc moc_query.cc
 )
 
