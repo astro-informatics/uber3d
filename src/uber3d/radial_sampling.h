@@ -71,8 +71,10 @@ public:
   /**
    * Builds a Spherical Bessel Transform for the this radial sampling scheme
    * \return uber3d::radial_transform
+   * \param lmax Maximum order of the spherical Bessel transform
+   * \param kmax Maximum scale
    */
-  virtual uber3d::radial_transform build_sbt () = 0;
+  virtual uber3d::radial_transform build_sbt (long int lmax, double kmax) = 0;
 
 
   /**
