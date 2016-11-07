@@ -6,6 +6,7 @@
 #include <iostream>
 #include <math.h>
 #include "radial_sampling.h"
+#include "dsbt_sbt.h"
 
 #define BESSEL_SAMPLING_NAME "bessel"
 
@@ -159,9 +160,12 @@ public:
     * \param kmax Maximum scale
     */
    uber3d::radial_transform *build_sbt (long int lmax, double kmax){
-         //TODO: Properly handle these cases
-        std::cerr << "SFB transform not implemented for bessel sampling" << std::endl;
-        exit(-1);
+         long N_trans = r_max * kmax / M_PI;
+         if( N_trans > N){
+            std::cerr << "Warning: Requesting scales larger than permitted by radial sampling" << std::endl;
+            N_trans = N;
+         }
+       return new dsbt_sbt(lmax, N_trans, r_max);
    }
 
     /**

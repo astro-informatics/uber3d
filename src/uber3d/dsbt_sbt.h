@@ -42,16 +42,16 @@ public:
    */
    void backward (const arr<float> &in_coeff, arr<float> &out_los){}
    void backward (const arr<double> &in_coeff, arr<double> &out_los);
-   
+
 private:
-   
+
    FastDSBT *dsbt;
-   
+
    // Radial boundary value 
    double r_max;
    uint64_t l_max;
    uint64_t n_max;
-   
+
 };
 } // end of package namespace
 

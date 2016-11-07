@@ -13,7 +13,7 @@ r_max(Rmax), l_max(Lmax), n_max(Nmax)
 
 dsbt_sbt::~dsbt_sbt()
 {
-    delete dsbt;
+    free(dsbt);
 }
 
 

@@ -5,6 +5,7 @@
 #include <string>
 #include "map.h"
 #include "sfb_coefficients.h"
+#include "separable_transform.h"
 
 namespace uber3d {
 
@@ -13,7 +14,7 @@ namespace uber3d {
   * class sfb_transform
   * 
   */
-class sfb_transform
+class sfb_transform: public separable_transform
 {
 public:
 
@@ -25,15 +26,17 @@ public:
   //  
 
   /**
-   * Builds a SFB transform based on the specificied radial and  spherical sampling
+   * Builds a SFB transform based on the specificied radial and spherical sampling
    * schemes
    * \param  r_samp Radial sampling to use for the transform
    * \param  sph_samp Spherical sampling scheme to use for the transform
    * \param  Lmax Maximum L multipole
-   * \param  Nmax Number of K samples
+   * \param  Kmax Maximum scale
    */
-   sfb_transform (const uber3d::radial_sampling &r_samp, const uber3d::spherical_sampling &sph_samp, long Lmax, long Nmax)
+   sfb_transform ( uber3d::radial_sampling &r_samp,  uber3d::spherical_sampling &sph_samp, long Lmax, double Kmax)
   {
+      m_rt = r_samp.build_sbt(Lmax, Kmax);
+      m_sht = sph_samp.build_sht(Lmax);
   }
 
 
@@ -59,6 +62,7 @@ public:
   }
 
 
+  
 };
 } // end of package namespace
 

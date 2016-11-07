@@ -27,9 +27,9 @@ protected:
   //  
 
   // Spherical Harmonics Transform to apply on shells
-  uber3d::sht m_sht;
+  uber3d::sht * m_sht;
   // Radial transform to apply on lines of sight
-  uber3d::radial_transform m_rt;
+  uber3d::radial_transform * m_rt;
 
 
 };
