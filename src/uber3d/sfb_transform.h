@@ -48,6 +48,7 @@ public:
   template <typename T1, typename T2>
   void foward (uber3d::map<T1> in_map, uber3d::sfb_coefficients<T2> out_almn)
   {
+     forward_transform(in_map, out_almn);
   }
 
 
@@ -59,10 +60,9 @@ public:
   template <typename T1, typename T2>
   void backward (uber3d::sfb_coefficients<T1> in_almn, uber3d::map<T2> out_map)
   {
+      backward_transform(in_almn, out_map);
   }
 
-
-  
 };
 } // end of package namespace
 

@@ -3,6 +3,7 @@
 #define SFB_COEFFICIENTS_H
 
 #include <string>
+#include "harmonic_coefficients.h"
 
 namespace uber3d {
 
@@ -12,8 +13,8 @@ namespace uber3d {
   * 
   */
 
-template<class T>
-class sfb_coefficients
+template<typename T>
+class sfb_coefficients : public harmonic_coefficients<T>
 {
 public:
 
