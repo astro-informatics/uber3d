@@ -143,7 +143,12 @@ public:
    */
    uber3d::spherical_sampling& get_spherical_sampling()
   { return *sph_samp; }
-
+  
+  /*! Returns a pointer to the beginning of slice \a n. */
+  template<typename T2> T *operator[] (T2 n) {return data[n];}
+  
+  /*! Returns a constant pointer to the beginning of slice \a n. */
+  template<typename T2> const T *operator[] (T2 n) const {return data[n];}
   
 protected:
 
