@@ -20,17 +20,16 @@ dsbt_sbt::~dsbt_sbt()
 void dsbt_sbt::forward(const arr< double >& in_los, arr< double >& out_coeff)
 {
     // Loop over l orders
-    for(uint64_t l=0; l < l_max; l++){
-        dsbt->computeDirectTransform(l, 0, r_max, in_los.begin(), &(out_coeff[l]));
-        
-    }
+//    for(uint64_t l=0; l < l_max; l++){
+//        dsbt->computeDirectTransform(l, 0, r_max, in_los.begin(), &(out_coeff[l]));
+//    }
 }
 
 
 void dsbt_sbt::backward(const arr< double >& in_coeff, arr< double >& out_los)
 {
     // Loop over l orders
-    for(uint64_t l=0; l < l_max; l++){
-        dsbt->computeInverseTransform(l, 0, r_max, in_coeff[l], out_los[l]);
-    }
+//    for(uint64_t l=0; l < l_max; l++){
+//       dsbt->computeInverseTransform(l, 0, r_max, in_coeff[l], out_los[l]);
+//    }
 }

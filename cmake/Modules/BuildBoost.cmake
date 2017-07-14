@@ -1,0 +1,30 @@
+#========================================================#
+# Build the Boost dependencies for the project using a specific version of python #
+#========================================================#
+
+set(BoostVersion 1.63.0)
+set(BoostMD5 1c837ecd990bb022d07e7aab32b09847)
+
+string(REGEX REPLACE "beta\\.([0-9])$" "beta\\1" BoostFolderName ${BoostVersion})
+string(REPLACE "." "_" BoostFolderName ${BoostFolderName})
+set(BoostFolderName boost_${BoostFolderName})
+
+ExternalProject_Add(Boost
+    PREFIX Boost
+    URL  http://sourceforge.net/projects/boost/files/boost/${BoostVersion}/${BoostFolderName}.tar.bz2/download
+    URL_MD5 ${BoostMD5}
+    CONFIGURE_COMMAND ./bootstrap.sh --with-libraries=math
+    BUILD_COMMAND           ./b2 install
+                                                        variant=release
+                                                        link=static
+                                                        cxxflags='-fPIC'
+                                                        --prefix=${CMAKE_BINARY_DIR}/extern
+                                                        -d 0
+                                                        -j8
+    INSTALL_COMMAND ""
+    BUILD_IN_SOURCE 1
+    )
+
+set(Boost_LIBRARY_DIR ${CMAKE_BINARY_DIR}/extern/lib/ )
+set(Boost_INCLUDE_DIR ${CMAKE_BINARY_DIR}/extern/include/boost/ )
+

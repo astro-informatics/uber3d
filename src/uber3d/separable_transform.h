@@ -51,14 +51,14 @@ protected:
         // TODO: Add some MPI parallelisation here
 
         // Performs the spherical harmonics transform
-        for(long i=0; i < N_r; i++){
-            m_sht->forward(in_map[i], tmp_coeff[i]);
-        }
+    //    for(long i=0; i < N_r; i++){
+         //   m_sht->forward(in_map[i], tmp_coeff[i]);
+  //      }
 
         // Performs the radial transform
-        for(long i=0; i < N_alm; i++){
-            m_rt->forward(tmp_coeff[i], out_coeff[i]);
-        }
+ //       for(long i=0; i < N_alm; i++){
+ //           m_rt->forward(tmp_coeff[i], out_coeff[i]);
+//        }
     }
 
     /**
@@ -70,14 +70,14 @@ protected:
     void backward_transform(uber3d::harmonic_coefficients<T1> &in_coeff, uber3d::map<T2> &out_map){
 
         // Performs the inverse  radial transform
-        for(long i=0; i < N_alm; i++){
-            m_rt->backward(tmp_coeff[i], out_coeff[i]);
-        }
+  //      for(long i=0; i < N_alm; i++){
+  //          m_rt->backward(tmp_coeff[i], out_coeff[i]);
+  //      }
                 
         // Performs the inverse spherical harmonics transform
-        for(long i=0; i < N_r; i++){
-            m_sht->backward(in_map[i], tmp_coeff[i]);
-        }
+ //       for(long i=0; i < N_r; i++){
+   //         m_sht->backward(in_map[i], tmp_coeff[i]);
+ //       }
     }
 
   // Protected attributes
