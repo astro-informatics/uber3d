@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
+include(ExternalProject)
 
 # Adding customized cmake modules
 list(APPEND CMAKE_MODULE_PATH  "${CMAKE_SOURCE_DIR}/cmake/Modules/")

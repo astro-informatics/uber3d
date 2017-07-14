@@ -25,6 +25,10 @@ protected:
     // Protected member functions
     //
 
+    // TO REMOVE
+    separable_transform(){
+    }
+    
     /**
      * Initialises a separable transform and allocate necessary memory
      * 

@@ -5,7 +5,7 @@ project(dsbt)
 
 # Using our own compiled version of boost
 include(BuildBoost) # Custom module
-include_directories(${Boost_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIR})
 
 set(DSBT_SRCS fastDSBT.cpp)

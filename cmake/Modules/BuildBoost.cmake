@@ -26,5 +26,5 @@ ExternalProject_Add(Boost
     )
 
 set(Boost_LIBRARY_DIR ${CMAKE_BINARY_DIR}/extern/lib/ )
-set(Boost_INCLUDE_DIR ${CMAKE_BINARY_DIR}/extern/include/boost/ )
+set(Boost_INCLUDE_DIR ${CMAKE_BINARY_DIR}/extern/include/ )
 

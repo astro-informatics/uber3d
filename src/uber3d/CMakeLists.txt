@@ -8,7 +8,7 @@ set(UBER3D_SRCS error_handling.cc healpix_sampling.cpp map.cpp
 bessel_sampling.cpp radial_sampling.cpp spherical_sampling.cpp sharp_sht.cpp dsbt_sbt.cpp)
 
 add_library(uber3d SHARED ${UBER3D_SRCS})
-target_link_libraries(uber3d c_utils fftpack sharp cxxsupport healpix ${HDF5_CXX_LIBRARIES})
+target_link_libraries(uber3d c_utils fftpack sharp cxxsupport healpix dsbt ${HDF5_CXX_LIBRARIES})
 target_include_directories(uber3d
     INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
     PRIVATE $<TARGET_PROPERTY:c_utils,INTERFACE_INCLUDE_DIRECTORIES>

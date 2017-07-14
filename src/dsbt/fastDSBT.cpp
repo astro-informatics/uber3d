@@ -39,6 +39,8 @@
 
 #include "fastDSBT.h"
 
+#include <boost/math/special_functions/bessel.hpp>
+
 void FastDSBT::loadBesselZeroes(const char *filename)
 {
         int Nmax=0, Lmax=0;
@@ -101,4 +103,103 @@ void FastDSBT::loadBesselZeroes(const char *filename)
                 std::cout<< "Error, could not save bessel zeros in file " << filename << std::endl;
             }
         }
+    }
+    
+    
+    /*! Computes the conversion matrix between orders \a l1 and \a l2. */
+    void FastDSBT::computeConversionMatrix(int64_t l1, int64_t l2) {
+
+        if (! initialized) {
+            std::cout << "FastDSBT is not initialized" << std::endl;
+            return;
+        }
+
+        if (!(matrixComputed && l2 == matrixLJ && l2 == matrixLGrid)) {
+            computeMatrix(l2,l2);
+        }
+
+        double normFactor = sqrt(2.0 * M_PI);
+        double tempvalue;
+
+#pragma omp parallel for private(tempvalue)
+        for (int64_t q=0; q < N; ++q) {
+            for (int64_t n=0; n < N; ++n) {
+                tempvalue = boost::math::sph_bessel(l1,qln[(L+1)*n + l2]*qln[(L+1)*q + l1]/qln[(L+1)*(N-1) + l2]);
+                for (int64_t p=0; p < N ; ++p) {
+                    if (n==0) {
+                        conversionMatrix[p*N +q] =0;
+                    }
+                    conversionMatrix[p*N+q] += tempvalue * transformMatrix[p*N+n];
+
+
+                    if (n == N -1) {
+                        conversionMatrix[p*N + q] = conversionMatrix[p*N + q]  * normFactor/(pow(qln[(L+1)*(N-1) + l2], 3.0) * pow(boost::math::sph_bessel(l1+1, qln[(L+1)*q + l1]),2.0));
+                    }
+                }
+            }
+        }
+
+        conversionMatrixL1 = l1;
+        conversionMatrixL2 = l2;
+        conversionMatrixComputed = true;
+    }
+
+    /*! Computes the transform matrix of order \a lj which provides results on the grid of order \a lgrid. */
+    void FastDSBT::computeMatrix(int64_t lj, int64_t lgrid) {
+
+        if (! initialized)
+            return;
+
+        double normFactor = sqrt(2.0 * M_PI);
+        double *weights   = (double *) malloc(N*sizeof(double));
+        double tempValue;
+
+
+#pragma omp parallel private(tempValue)
+        {
+
+            if (lj == lgrid) {
+#pragma omp for
+                for (int64_t p=0; p < N ; ++p) {
+                    for (int64_t q=0; q <= p ; ++q) {
+                        tempValue = boost::math::sph_bessel(lj, qln[(L+1)*p + lj]*qln[(L+1)*q + lj]/qln[(L+1)*(N-1) + lj]);
+
+                        transformMatrix[p*N + q] = tempValue;
+                        if ( p != q)
+                            transformMatrix[q*N + p] = tempValue;
+                    }
+
+                    tempValue  = boost::math::sph_bessel(lj+1, qln[(L+1)*p + lj]);
+                    weights[p] = normFactor/(tempValue*tempValue);
+                }
+            } else {
+
+#pragma omp for
+                for (int64_t p=0; p < N ; ++p) {
+                    for (int64_t q=0; q < N ; ++q) {
+                        tempValue = boost::math::sph_bessel(lj, qln[(L+1)*p + lgrid]*qln[(L+1)*q + lj]/qln[(L+1)*(N-1) + lgrid]);
+                        transformMatrix[p*N + q] = tempValue;
+                    }
+
+                    tempValue  = boost::math::sph_bessel(lj+1, qln[(L+1)*p + lj]);
+                    weights[p] = normFactor/(tempValue*tempValue);
+                }
+
+            }
+
+
+#pragma omp for
+            for (int64_t p=0; p < N ; ++p) {
+                for (int64_t q=0; q < N ; ++q) {
+                    transformMatrix[p*N + q] = transformMatrix[p*N + q]*weights[q];
+                }
+            }
+
+        }
+
+        matrixLJ = lj;
+        matrixLGrid = lgrid;
+        matrixComputed = true;
+
+        free(weights);
     }
